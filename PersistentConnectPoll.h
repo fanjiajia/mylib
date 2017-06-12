@@ -23,7 +23,7 @@ public:
 
 public:
     bool init_connect();
-    bool setkeepalive();
+    bool make_socket_keepalive();
 
 public:
     std::string m_ip_;

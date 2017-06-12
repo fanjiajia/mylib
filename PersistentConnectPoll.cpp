@@ -10,7 +10,7 @@ CPersistentConnect::~CPersistentConnect()
     evutil_closesocket(m_fd_);
 }
 
-bool CPersistentConnect::setkeepalive()
+bool CPersistentConnect::make_socket_keepalive()
 {
     int keepAlive = 1;
     int keepIdle = 5;
@@ -44,7 +44,7 @@ bool CPersistentConnect::init_connect()
     evutil_make_socket_nonblocking(m_fd_);
     evutil_make_listen_socket_reuseable(m_fd_);
 
-    setkeepalive();
+    make_socket_keepalive();
 
     if (connect(m_fd_, (struct sockaddr*)&sin, sizeof(sin)) < 0)
     {
