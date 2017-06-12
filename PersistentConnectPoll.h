@@ -1,5 +1,5 @@
-#ifndef __ATS_CONNECT_HEADER_H
-#define __ATS_CONNECT_HEADER_H
+#ifndef __PERSISTENT_CONNECT_POLL_HEADER_H_
+#define __PERSISTENT_CONNECT_POLL_HEADER_H_
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
