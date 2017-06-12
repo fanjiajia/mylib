@@ -1,9 +1,8 @@
 #include "PersistentConnectPoll.h"
 
-CPersistentConnect::CPersistentConnect(std::string _ip, int _port)
+CPersistentConnect::CPersistentConnect(std::string _ip, int _port) : m_ip_(_ip), m_port_(_port)
 {
-    m_ip_ = _ip;
-    m_port_ = _port;
+
 }
 
 CPersistentConnect::~CPersistentConnect()
@@ -59,11 +58,8 @@ bool CPersistentConnect::init_connect()
     return true;
 }
 
-CPersistentConnectPoll::CPersistentConnectPoll(std::string host, int port)
+CPersistentConnectPoll::CPersistentConnectPoll(std::string host, int port) : _ip(host), _port(port)
 {
-    _ip = host;
-    _port = port;
-
     m_mutexlock = new pthread_mutex_t;
     pthread_mutex_init(m_mutexlock, NULL);
 }
