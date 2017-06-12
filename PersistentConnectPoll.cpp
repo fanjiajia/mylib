@@ -70,7 +70,6 @@ CPersistentConnectPoll::CPersistentConnectPoll(std::string host, int port)
 
 CPersistentConnectPoll::~CPersistentConnectPoll()
 {
-    client_list_.clear();
     pthread_mutex_destroy(m_mutexlock);
     delete m_mutexlock;
 }
@@ -108,7 +107,6 @@ int main()
     PersistentConnectPollPtr clientpoll_ptr(new CPersistentConnectPoll("58.221.38.183", 80));
 
     PersistentConnectPtr m_ptr = clientpoll_ptr->GetConnection();
-
     printf("size: %d\n", clientpoll_ptr->client_list_.size());
     clientpoll_ptr->ReleaseConnection(m_ptr);
     printf("size: %d\n", clientpoll_ptr->client_list_.size());
