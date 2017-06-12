@@ -22,3 +22,19 @@ bool CThreadPool::threadpoolStart(int nThreadNum, THREAD_FUNC func, void *param)
 
     return true;
 }
+
+#if 0
+
+void *thread_fun(void *arg)
+{
+    printf("hello world\n");
+}
+
+int main()
+{
+    ThreadPollPtr m_thread_pool_(new CThreadPool);
+    m_thread_pool_->threadpoolStart(2, thread_fun, NULL);
+    return 0;
+}
+
+#endif

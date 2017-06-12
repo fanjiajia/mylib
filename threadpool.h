@@ -18,6 +18,7 @@ private:
     std::list<std::shared_ptr<std::thread>> m_list;
 };
 
+typedef std::shared_ptr<CThreadPool> ThreadPollPtr;
 
 #endif
 
