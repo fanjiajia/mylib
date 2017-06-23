@@ -13,9 +13,9 @@ CPersistentConnect::~CPersistentConnect()
 bool CPersistentConnect::make_socket_keepalive()
 {
     int keepAlive = 1;
-    int keepIdle = 5;
-    int keepInterval = 5;
-    int keepCount = 3;
+    int keepIdle = 5;           /* 开始首次KeepAlive探测前的TCP空闭时间 */
+    int keepInterval = 5;       /* 两次KeepAlive探测间的时间间隔 */
+    int keepCount = 3;          /* 判定断开前的KeepAlive探测次数 */
     if (setsockopt(m_fd_, SOL_SOCKET, SO_KEEPALIVE, (void*)&keepAlive, sizeof(keepAlive)) == -1) return false;
     if (setsockopt(m_fd_, SOL_TCP, TCP_KEEPIDLE, (void *)&keepIdle, sizeof(keepIdle)) == -1) return false;
     if (setsockopt(m_fd_, SOL_TCP, TCP_KEEPINTVL, (void *)&keepInterval, sizeof(keepInterval)) == -1) return false;
@@ -97,15 +97,52 @@ void CPersistentConnectPoll::ReleaseConnection(PersistentConnectPtr conn)
 }
 
 
-#if 0
+#if 1
+
+void do_write(evutil_socket_t fd, short events, void *arg)
+{
+    if(events & EV_TIMEOUT)
+    {
+        printf("write timeout\n");
+        return;
+    }
+
+    int err;
+    socklen_t len = sizeof(err);
+    getsockopt(fd, SOL_SOCKET, SO_ERROR, &err, &len);
+    if(err)
+    {
+        if(err == EINPROGRESS || err == EINTR) return;
+        printf("connect error!\n");
+        return;
+    }
+
+}
+
+void do_read(evutil_socket_t fd, short events, void *arg)
+{
+
+}
+
 int main()
 {
     PersistentConnectPollPtr clientpoll_ptr(new CPersistentConnectPoll("58.221.38.183", 80));
 
+    struct timeval time_out;
+    time_out.tv_sec  = 30;
+    time_out.tv_usec = 0;
+
+    auto base = event_base_new();
+
     PersistentConnectPtr m_ptr = clientpoll_ptr->GetConnection();
-    printf("size: %d\n", clientpoll_ptr->client_list_.size());
-    clientpoll_ptr->ReleaseConnection(m_ptr);
-    printf("size: %d\n", clientpoll_ptr->client_list_.size());
+
+    auto write_event = event_new(base, m_ptr->m_fd_, EV_WRITE | EV_PERSIST, do_write, NULL);
+    auto read_event  = event_new(base, m_ptr->m_fd_, EV_READ  | EV_PERSIST, do_read,  NULL);
+
+    event_add(write_event, &time_out);
+
+    event_base_dispatch(base);
+    event_base_free(base);
 
     return 0;
 }
