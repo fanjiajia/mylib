@@ -1,14 +1,16 @@
-#ifndef __http_response_h__
-#define __http_response_h__
+#ifndef __http_bufferparser_h__
+#define __http_bufferparser_h__
 #include "http_parser.h"
 #include <stdio.h>
 #include <memory>
+#include <string.h>
+#include <stdlib.h>
 
-class HttpResponse {
+class HttpBufferParser {
 public:
-    HttpResponse() {
+    HttpBufferParser(http_parser_type p_type) {
         parser.data = this;
-        http_parser_init(&parser, HTTP_RESPONSE);
+        http_parser_init(&parser, p_type);
         settings.on_message_begin = on_message_begin;
         settings.on_header_field = on_header_field;
         settings.on_header_value = on_header_value;
@@ -20,7 +22,7 @@ public:
         settings.on_chunk_header = chunk_header_cb;
         settings.on_chunk_complete = chunk_complete_cb;
     }
-    virtual ~HttpResponse() {
+    virtual ~HttpBufferParser() {
     }
     int parser_execute(const char *data, size_t len) {
         return http_parser_execute(&parser, &settings, data, len);

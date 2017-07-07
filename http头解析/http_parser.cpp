@@ -631,10 +631,7 @@ parse_url_char(enum state s, const char ch)
   return s_dead;
 }
 
-size_t http_parser_execute (http_parser *parser,
-                            const http_parser_settings *settings,
-                            const char *data,
-                            size_t len)
+size_t http_parser_execute (http_parser *parser, const http_parser_settings *settings, const char *data, size_t len)
 {
   char c, ch;
   int8_t unhex_val;

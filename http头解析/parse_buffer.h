@@ -1,12 +1,15 @@
-#ifndef __parse_response_h__
-#define __parse_response_h__
-#include "http_response.h"
+#ifndef __parse_buffer_h__
+#define __parse_buffer_h__
+#include "http_bufferparser.h"
 #include <string>
 
-class ParseResponse : public HttpResponse {
+class ParseHttpBuffer : public HttpBufferParser {
 public:
-    ParseResponse(){}
-    ~ParseResponse(){}
+    ParseHttpBuffer(http_parser_type type): HttpBufferParser(type)
+    {
+        iscomplete = false;
+    }
+    ~ParseHttpBuffer(){}
 
 private:
     int _on_message_begin(http_parser *parser);
@@ -22,5 +25,7 @@ private:
 
 public:
     std::string response_status;
+    std::string http_body;
+    bool iscomplete;
 };
 #endif
