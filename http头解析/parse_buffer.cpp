@@ -33,14 +33,14 @@ int ParseHttpBuffer::_on_request_url(http_parser *parser, const char *at, size_t
 int ParseHttpBuffer::_on_response_status(http_parser *parser, const char *at, size_t len)
 {
     //printf("_on_response_status\n");
-    response_status = std::string(at).substr(0, len);
+    response_status.append(at, len)
     return 0;
 }
 
 int ParseHttpBuffer::_on_body(http_parser *parser, const char *at, size_t len)
 {
     //printf("_on_body\n");
-    http_body = std::string(at).substr(0, len);
+    http_body.appen(at, len);
     return 0;
 }
 

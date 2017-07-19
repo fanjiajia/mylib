@@ -136,7 +136,7 @@ static void do_read_cb_(struct bufferevent *bev, void *ctx)
         char buff[1024] = { '\0' };
         size_t ncount = bufferevent_read(bev, buff, sizeof(buff));
         if (ncount <= 0) break;
-        pctx->m_readbuffer += buff;
+        pctx->m_readbuffer.append(buff, ncount);
     }
 
     std::shared_ptr<ParseHttpBuffer> parser_resp = std::make_shared<ParseHttpBuffer>(HTTP_RESPONSE);
